@@ -27,7 +27,6 @@ public class ScreenCaptureFrame extends JFrame {
 		int frameHeight = height + WINDOW_PADDING * 2 + 20; // window control buffer
 		setSize(frameWidth, frameHeight);
 		
-		
 		this.imageLabel = new JLabel();
 		this.imageLabel.setSize(width, height);
 		this.imageLabel.setLocation(WINDOW_PADDING, WINDOW_PADDING);
