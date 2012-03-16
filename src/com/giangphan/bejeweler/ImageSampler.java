@@ -1,4 +1,4 @@
-package com.giangphan.scraper;
+package com.giangphan.bejeweler;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -20,11 +20,11 @@ public class ImageSampler {
 	 * @param image
 	 */
 	public ImageSampler(BufferedImage image, int gridWidth, int gridHeight) {
-		this.image = image;
+		this.setImage(image);
 		this.gridWidth = gridWidth;
 		this.gridHeight = gridHeight;
-		this.cellWidth = this.image.getWidth() / this.gridWidth;
-		this.cellHeight = this.image.getHeight() / this.gridHeight;
+		this.cellWidth = this.getImage().getWidth() / this.gridWidth;
+		this.cellHeight = this.getImage().getHeight() / this.gridHeight;
 	}
 	
 	/**
@@ -45,25 +45,25 @@ public class ImageSampler {
 	
 	private Color getAverageColor(int gridx, int gridy) {
 		int totalPixels = cellWidth * cellHeight;
-		int[] pixelRgb = this.image.getRGB(
-				gridx * cellWidth, 
-				gridy * cellHeight, 
-				cellWidth, 
-				cellHeight, 
-				null, 0, 0);
 		int[] avg = new int[] { 0, 0, 0 };		
+				
+		int startX = gridx * cellWidth;
+		int startY = gridy * cellHeight;
+		int endX = (gridx + 1) * cellWidth;
+		int endY = (gridy + 1) * cellHeight;
 		
-		assert(totalPixels == pixelRgb.length);
-		
-		for (int i = 0; i < pixelRgb.length; i++) {
-			int pixel = pixelRgb[i];
-			int red = (pixel >> 16) & 0xff;
-			int green = (pixel >> 8) & 0xff;
-			int blue = (pixel & 0xff);
-			
-			avg[0] += red;
-			avg[1] += green;
-			avg[2] += blue;
+		for (int i = startX; i < endX; i++) {
+			for (int j = startY; j < endY; j++) {
+				int pixel = this.getImage().getRGB(i, j);
+				
+				int red = (pixel >> 16) & 0xff;
+				int green = (pixel >> 8) & 0xff;
+				int blue = (pixel & 0xff);
+				
+				avg[0] += red;
+				avg[1] += green;
+				avg[2] += blue;
+			}
 		}
 		
 		avg[0] /= totalPixels;
@@ -71,5 +71,13 @@ public class ImageSampler {
 		avg[2] /= totalPixels;
 		// Create new color
 		return new Color(avg[0], avg[1], avg[2]);
+	}
+
+	public BufferedImage getImage() {
+		return image;
+	}
+
+	public void setImage(BufferedImage image) {
+		this.image = image;
 	}
 }

@@ -1,4 +1,4 @@
-package com.giangphan.scraper;
+package com.giangphan.bejeweler;
 
 import java.awt.Color;
 import java.security.InvalidParameterException;
@@ -68,6 +68,18 @@ public class GridFrame extends JFrame {
 			throw new InvalidParameterException("y");
 		
 		gridCells[x + (this.gridWidth * y)].setBackground(c);
+	}
+	
+	/**
+	 * Updates the cell colors from a 2-dimensional array.
+	 * @param colors
+	 */
+	public void updateCellColors(Color[][] colors) {
+		for (int i = 0; i < colors.length; i++) {
+			for (int j = 0; j < colors[i].length; j++) {
+				setCellColor(i, j, colors[i][j]);
+			}
+		}
 	}
 	
 	public static void main(String[] args) {

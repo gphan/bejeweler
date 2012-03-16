@@ -1,4 +1,4 @@
-package com.giangphan.scraper;
+package com.giangphan.bejeweler;
 
 import java.awt.Color;
 import java.awt.Graphics;
