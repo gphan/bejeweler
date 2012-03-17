@@ -82,6 +82,19 @@ public class GridFrame extends JFrame {
 		}
 	}
 	
+	/**
+	 * Updates gem colors based on gemcolor array.
+	 * 
+	 * @param colors
+	 */
+	public void updateGemColors(GemColor[][] colors) {
+		for (int x = 0; x < colors.length; x++) {
+			for (int y = 0; y < colors.length; y++) {
+				setCellColor(x, y, colors[x][y].getColor());
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		new GridFrame(25, 25, 8, 8);
 	}

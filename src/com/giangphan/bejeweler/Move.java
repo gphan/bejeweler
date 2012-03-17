@@ -35,4 +35,9 @@ public class Move {
 	public int getToY() {
 		return toY;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Move X: %d Y: %d to X: %d Y: %d", fromX, fromY, toX, toY);
+	}
 }

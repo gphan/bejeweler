@@ -70,6 +70,7 @@ public class ScreenCapturer {
 	public void centerOnPoint(int x, int y) {
 		int xloc = (x < minX) ? 0 : (x >= maxX ? maxX - minX : x - minX);
 		int yloc = (y < minY) ? 0 : (y >= maxY ? maxY - minY : y - minY);
+		System.out.println(String.format("Recentering on X: %d Y: %d", xloc, yloc));
 		captureRect.setLocation(xloc, yloc);
 	}
 
