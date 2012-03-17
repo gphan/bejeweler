@@ -8,6 +8,7 @@ import java.awt.PointerInfo;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 /**
@@ -25,7 +26,6 @@ public class ScreenCapturer {
 	private int minY;
 	private int maxX;
 	private int maxY;
-	private ScreenCaptureFrame captureFrame;
 
 	/**
 	 * Creates a new screen capturer based on the x and y locations and the
@@ -58,9 +58,6 @@ public class ScreenCapturer {
 	 */
 	public void recapture() {
 		image = robot.createScreenCapture(captureRect);
-		if (captureFrame != null) {
-			captureFrame.setCapture(image);
-		}
 	}
 
 	public void centerCaptureOnMouse() {
@@ -94,13 +91,5 @@ public class ScreenCapturer {
 		this.minY = captureRect.height / 2;
 		this.maxX = screenDimension.width - minX;
 		this.maxY = screenDimension.height - minY;
-	}
-
-	public ScreenCaptureFrame getCaptureFrame() {
-		return captureFrame;
-	}
-
-	public void setCaptureFrame(ScreenCaptureFrame captureFrame) {
-		this.captureFrame = captureFrame;
 	}
 }

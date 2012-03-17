@@ -14,8 +14,14 @@ import java.awt.image.BufferedImage;
  * 
  */
 public class InterpolationColorSampler implements ColorSampler {
+	private static final int CENTER_RADIUS = 5;
 	private BufferedImage interpCanvas = new BufferedImage(1, 1,
 			BufferedImage.TYPE_INT_RGB);
+	private final boolean centerWeighted;
+
+	public InterpolationColorSampler(boolean centerWeighted) {
+		this.centerWeighted = centerWeighted;
+	}
 
 	@Override
 	public Color[][] getColorSamples(BufferedImage image, int gridWidth,
@@ -23,14 +29,15 @@ public class InterpolationColorSampler implements ColorSampler {
 		int cellWidth = image.getWidth() / gridWidth;
 		int cellHeight = image.getHeight() / gridHeight;
 		Color[][] colors = new Color[gridWidth][gridHeight];
-		
+
 		for (int i = 0; i < gridWidth; i++) {
 			for (int j = 0; j < gridHeight; j++) {
-				BufferedImage sub = getGridCellImage(image, cellWidth, cellHeight, i, j);
+				BufferedImage sub = getGridCellImage(image, cellWidth,
+						cellHeight, i, j);
 				colors[i][j] = getInterpolatedColor(sub);
 			}
 		}
-		
+
 		return colors;
 	}
 
@@ -48,7 +55,16 @@ public class InterpolationColorSampler implements ColorSampler {
 			int cellHeight, int gridX, int gridY) {
 		int startX = gridX * cellWidth;
 		int startY = gridY * cellHeight;
-		return image.getSubimage(startX, startY, cellWidth, cellHeight);
+
+		if (centerWeighted) {
+			startX = startX + (cellWidth / 2) - CENTER_RADIUS;
+			startY = startY + (cellHeight / 2) - CENTER_RADIUS;
+			return image.getSubimage(startX, startY, CENTER_RADIUS * 2,
+					CENTER_RADIUS * 2);
+		} else {
+			return image.getSubimage(startX, startY, cellWidth, cellHeight);
+		}
+
 	}
 
 	/**

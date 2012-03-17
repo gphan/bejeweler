@@ -2,7 +2,6 @@ package com.giangphan.bejeweler;
 
 import java.awt.AWTException;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
@@ -48,15 +47,12 @@ public class ScreenCaptureFrame extends JFrame {
 		recenterButton = new JButton("Recenter");
 		recenterButton.setSize(100,40);
 		recenterButton.setLocation(0,0);
-		recenterButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
 		
 		this.getContentPane().add(recenterButton);
+	}
+	
+	public void addRecenterActionListener(ActionListener listener) {
+		recenterButton.addActionListener(listener);
 	}
 	
 	public void setCapture(BufferedImage image) {

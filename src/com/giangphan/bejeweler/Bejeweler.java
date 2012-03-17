@@ -25,10 +25,10 @@ public class Bejeweler {
 			
 			final ScreenCaptureFrame frame = new ScreenCaptureFrame(totalSize, totalSize);
 			final ScreenCapturer capturer = new ScreenCapturer(0, 0, totalSize, totalSize);
-			capturer.setCaptureFrame(frame);
 			
 			final GridFrame grid = new GridFrame(cellSize, cellSize, gridSize, gridSize);
-			final ColorSampler sampler = new InterpolationColorSampler();
+			final ColorSampler sampler = new InterpolationColorSampler(true);
+			final ColorMatcher matcher = new ColorMatcher(new PythagoreanColorDiff());
 			
 			Timer timer = new Timer(100, new ActionListener() {
 				
@@ -37,7 +37,7 @@ public class Bejeweler {
 					capturer.centerCaptureOnMouse();
 					capturer.recapture();
 					Color[][] sampleColors = sampler.getColorSamples(capturer.getImage(), gridSize, gridSize);
-					grid.updateCellColors(sampleColors);
+					grid.updateCellColors(matcher.getMatchedColors(sampleColors));
 				}
 			});
 			
