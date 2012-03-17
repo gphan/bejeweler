@@ -20,13 +20,15 @@ public class Bejeweler {
 	public static void main(String[] args) {
 		try {
 			final int gridSize = 8;
-			final int cellSize = 25;
+			final int cellSize = 50;
 			final int totalSize = gridSize * cellSize;
 			
-			final ScreenCapturer capturer = new ScreenCapturer(0, 0, totalSize, totalSize);
 			final ScreenCaptureFrame frame = new ScreenCaptureFrame(totalSize, totalSize);
+			final ScreenCapturer capturer = new ScreenCapturer(0, 0, totalSize, totalSize);
+			capturer.setCaptureFrame(frame);
+			
 			final GridFrame grid = new GridFrame(cellSize, cellSize, gridSize, gridSize);
-			final ColorSampler sampler = new AverageColorSampler();
+			final ColorSampler sampler = new InterpolationColorSampler();
 			
 			Timer timer = new Timer(100, new ActionListener() {
 				
@@ -34,7 +36,6 @@ public class Bejeweler {
 				public void actionPerformed(ActionEvent arg0) {
 					capturer.centerCaptureOnMouse();
 					capturer.recapture();
-					frame.setCapture(capturer.getImage());
 					Color[][] sampleColors = sampler.getColorSamples(capturer.getImage(), gridSize, gridSize);
 					grid.updateCellColors(sampleColors);
 				}
