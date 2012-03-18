@@ -5,13 +5,15 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class ScreenCaptureFrame extends JFrame {
+public class ScreenCaptureFrame extends JFrame implements Observer {
 
 	private static final int WINDOW_PADDING = 5;
 	private JLabel imageLabel;
@@ -27,9 +29,11 @@ public class ScreenCaptureFrame extends JFrame {
 	 * @param height
 	 * @throws AWTException
 	 */
-	public ScreenCaptureFrame(int width, int height, ScreenCapturer capturer) throws AWTException {
+	public ScreenCaptureFrame(ScreenCapturer capturer, int width, int height) throws AWTException {
 		super("Screen Capture");
 		this.capturer = capturer;
+		
+		this.capturer.addObserver(this);
 		
 		setLocation(300, 10);
 		int frameWidth = width + WINDOW_PADDING * 2;
@@ -48,7 +52,6 @@ public class ScreenCaptureFrame extends JFrame {
 		setBackground(Color.black);
 		setVisible(true);
 		setAlwaysOnTop(true);
-		updateCapture();
 	}
 	
 	private void initComponents() {
@@ -67,7 +70,6 @@ public class ScreenCaptureFrame extends JFrame {
 				
 				listening = false;
 				capturer.centerCaptureOnMouse();
-				updateCapture();
 			}
 		});
 		
@@ -95,8 +97,8 @@ public class ScreenCaptureFrame extends JFrame {
 		this.imageLabel.setIcon(new ImageIcon(image));
 	}
 	
-	public void updateCapture() {
-		capturer.recapture();
+	@Override
+	public void update(Observable arg0, Object arg1) {
 		this.setCapture(capturer.getImage());
 	}
 }

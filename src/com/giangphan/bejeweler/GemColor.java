@@ -8,13 +8,14 @@ import java.awt.Color;
  *
  */
 public enum GemColor {
-	BLUE (new Color(0, 60, 170)),
-	WHITE (new Color(200, 200, 200)),
-	ORANGE (new Color(255, 116, 10)),
-	RED (new Color(200, 0, 0)),
-	YELLOW (new Color(255, 255, 0)),
-	GREEN (new Color(85, 255, 130)),
-	PURPLE (new Color(200, 0, 200));
+	BLUE (Color.blue),
+	WHITE (Color.white),
+	ORANGE (Color.orange),
+	RED (Color.red),
+	YELLOW (Color.yellow),
+	GREEN (Color.green),
+	PURPLE (new Color(200, 0, 200)),
+	BLACK (Color.black);
 	
 	private Color color;
 

@@ -6,7 +6,8 @@ import java.awt.Robot;
 import java.awt.event.InputEvent;
 
 public class BotPlayer {
-
+	private static final int PLAY_TIME = 60 * 1000;
+	private static final int MOVE_DELAY = 100;
 	private final ScreenCapturer capturer;
 	private final ColorSampler sampler;
 	private final ColorMatcher matcher;
@@ -43,45 +44,55 @@ public class BotPlayer {
 		int cellHeight = capturer.getCaptureRect().height / GRID_SIZE;
 		int windowX = capturer.getCaptureRect().x;
 		int windowY = capturer.getCaptureRect().y;
-		
+
 		System.out.println("Cell width: " + cellWidth);
 		System.out.println("Cell height: " + cellHeight);
 		System.out.println("Window X: " + windowX);
 		System.out.println("Window Y: " + windowY);
-		
+
 		running = true;
+		long runningTime = 0;
+		long startTime = System.currentTimeMillis();
 		while (isRunning()) {
 			this.colorGrid = getGemColors();
 			if (gridFrame != null) {
 				gridFrame.updateGemColors(this.colorGrid);
 			}
-			
+
 			System.out.println("Looking for a move...");
-			
+
 			Move m = getFirstMove();
-			if (m != Move.NO_MOVE) {
+			if (m == Move.NO_MOVE) {
 				System.out.println("No move found.");
-			}
-			else {
+			} else {
 				System.out.println(m.toString());
 			}
 
 			// Calculate start click
 			int centerOfStartGemX = windowX + (m.getFromX() * cellWidth)
-					- (cellWidth / 2);
+					+ (cellWidth / 2);
 			int centerOfStartGemY = windowY + (m.getFromY() * cellHeight)
-					- (cellHeight / 2);
+					+ (cellHeight / 2);
 			int centerOfEndGemX = windowX + (m.getToX() * cellWidth)
-					- (cellWidth / 2);
+					+ (cellWidth / 2);
 			int centerOfEndGemY = windowY + (m.getToY() * cellHeight)
-					- (cellHeight / 2);
+					+ (cellHeight / 2);
 
 			robot.mouseMove(centerOfStartGemX, centerOfStartGemY);
 			robot.mousePress(InputEvent.BUTTON1_MASK);
+			robot.delay(MOVE_DELAY);
 			robot.mouseMove(centerOfEndGemX, centerOfEndGemY);
 			robot.mouseRelease(InputEvent.BUTTON1_MASK);
 
-			Thread.sleep(200);
+			long currTime = System.currentTimeMillis();
+			runningTime += currTime - startTime;
+			startTime = currTime;
+
+			if (runningTime > PLAY_TIME) {
+				running = false;
+			}
+
+			Thread.sleep(100);
 		}
 		System.out.println("Stopping play...");
 	}
@@ -101,25 +112,36 @@ public class BotPlayer {
 	 * private instance of colorGrid.
 	 */
 	private Move getFirstMove() {
-		if (isBottomsUp()) {
-			for (int y = GRID_SIZE; y >= 0; y--) {
-				for (int x = GRID_SIZE; x >= 0; x--) {
-					Move m = getAnyMove(x, y, this.colorGrid);
-					if (m != null) {
-						return m;
-					}
-					System.out.println(String.format("No move found for %d, %d", x, y));
-				}
-			}
-		} else {
-			for (int x = 0; x < GRID_SIZE; x++) {
-				for (int y = 0; y < GRID_SIZE; y++) {
-					Move m = getAnyMove(x, y, this.colorGrid);
-					if (m != null) {
-						return m;
+		try {
+			if (isBottomsUp()) {
+				for (int x = GRID_SIZE - 1; x >= 0; x--) {
+					for (int y = GRID_SIZE - 1; y >= 0; y--) {
+						if (this.colorGrid[x][y] == GemColor.BLACK)
+							continue;
+						
+						Move m = getAnyMove(x, y, this.colorGrid);
+						if (m != null) {
+							return m;
+						}
+						System.out.println(String.format(
+								"No move found for %d, %d", x, y));
 					}
 				}
+			} else {
+				for (int x = 0; x < GRID_SIZE; x++) {
+					for (int y = 0; y < GRID_SIZE; y++) {
+						if (this.colorGrid[x][y] == GemColor.BLACK)
+							continue;
+						
+						Move m = getAnyMove(x, y, this.colorGrid);
+						if (m != null) {
+							return m;
+						}
+					}
+				}
 			}
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 
 		return Move.NO_MOVE;
@@ -143,7 +165,7 @@ public class BotPlayer {
 		}
 
 		// X-xx
-		if (x < GRID_SIZE - 2 && target == grid[x + 2][y]
+		if (x < GRID_SIZE - 3 && target == grid[x + 2][y]
 				&& grid[x + 3][y] == grid[x + 2][y]) {
 			return new Move(x, y, x + 1, y);
 		}
@@ -152,7 +174,7 @@ public class BotPlayer {
 		// -
 		// x
 		// x
-		if (y < GRID_SIZE - 2 && target == grid[x][y + 2]
+		if (y < GRID_SIZE - 3 && target == grid[x][y + 2]
 				&& grid[x][y + 2] == grid[x][y + 3]) {
 			return new Move(x, y, x, y + 1);
 		}

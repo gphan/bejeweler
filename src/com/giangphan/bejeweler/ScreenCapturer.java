@@ -8,8 +8,8 @@ import java.awt.PointerInfo;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.Observable;
 
 /**
  * Captures the screen with the given initial x, y, w, and h.
@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
  * @author gphan
  * 
  */
-public class ScreenCapturer {
+public class ScreenCapturer extends Observable {
 
 	private Robot robot;
 	private BufferedImage image;
@@ -58,6 +58,8 @@ public class ScreenCapturer {
 	 */
 	public void recapture() {
 		image = robot.createScreenCapture(captureRect);
+		setChanged();
+		notifyObservers();
 	}
 
 	public void centerCaptureOnMouse() {
@@ -72,6 +74,7 @@ public class ScreenCapturer {
 		int yloc = (y < minY) ? 0 : (y >= maxY ? maxY - minY : y - minY);
 		System.out.println(String.format("Recentering on X: %d Y: %d", xloc, yloc));
 		captureRect.setLocation(xloc, yloc);
+		recapture();
 	}
 
 	/**

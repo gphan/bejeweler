@@ -28,10 +28,10 @@ public class Bejeweler {
 			
 			
 			final ScreenCapturer capturer = new ScreenCapturer(0, 0, totalSize, totalSize);
-			final ScreenCaptureFrame frame = new ScreenCaptureFrame(totalSize, totalSize, capturer);
+			final ScreenCaptureFrame frame = new ScreenCaptureFrame(capturer, totalSize, totalSize);
 			final GridFrame grid = new GridFrame(cellSize, cellSize, gridSize, gridSize);
 			final ColorSampler sampler = new InterpolationColorSampler(true);
-			final ColorMatcher matcher = new ColorMatcher(new PythagoreanColorDiff());
+			final ColorMatcher matcher = new ColorMatcher(new PythagoreanColorDiff(true));
 			final BotPlayer player = new BotPlayer(capturer, sampler, matcher); 
 			player.setGridFrame(grid);
 			

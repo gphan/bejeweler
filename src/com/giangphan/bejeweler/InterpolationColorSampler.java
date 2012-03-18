@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
  * 
  */
 public class InterpolationColorSampler implements ColorSampler {
-	private static final int CENTER_RADIUS = 5;
+	private static final int CENTER_RADIUS = 10;
 	private BufferedImage interpCanvas = new BufferedImage(1, 1,
 			BufferedImage.TYPE_INT_RGB);
 	private final boolean centerWeighted;

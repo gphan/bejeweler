@@ -3,6 +3,7 @@ package com.giangphan.bejeweler;
 import java.awt.Color;
 
 public class ColorMatcher {
+	private static final double DIST_THRESHOLD = 0.25;
 	private ColorDiff diffEquation;
 	
 	/**
@@ -48,17 +49,17 @@ public class ColorMatcher {
 		
 		for (int i = 0; i < colors.length; i++) {
 			for (int j = 0; j < colors[i].length; j++) {
-				double closetDist = gemColors[0].getColorDifference(diffEquation, colors[i][j]);
-				GemColor gemColor = gemColors[0];
-				for (int k = 1; k < gemColors.length; k++) {
+				for (int k = 1; k < gemColors.length - 1; k++) {
 					double testDist = gemColors[k].getColorDifference(diffEquation, colors[i][j]);
-					if (testDist < closetDist) {
-						closetDist = testDist;
-						gemColor = gemColors[k];
+					System.out.println("Color Distance : " + testDist);
+					if (testDist < DIST_THRESHOLD) {
+						matched[i][j] = gemColors[k];
+						break;
 					}
 				}
-				
-				matched[i][j] = gemColor;
+				if (matched[i][j] == null) {
+					matched[i][j] = GemColor.BLACK;
+				}
 			}
 		}
 		
